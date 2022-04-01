@@ -1,5 +1,6 @@
 import axios from "axios";
-import * as Sentry from "@sentry/react";
+import logger from "./log.service"
+import { toast } from "react-toastify"
 
 axios.interceptors.response.use((res)=>res, function (error) {
     const expectedErrors = 
@@ -7,7 +8,8 @@ axios.interceptors.response.use((res)=>res, function (error) {
         error.response.status >=400 &&
         error.response.status < 500;
      if (!expectedErrors){
-        Sentry.captureEvent(error);
+        logger.log(error);
+        toast.error("Что то пошло не так")
      }
      return Promise.reject(error)
 })
